@@ -1,4 +1,5 @@
-﻿namespace TodoServerApp.Data.Interfaces
+﻿//Объявление интерфейса заполнения таблицы
+namespace TodoServerApp.Data.Interfaces
 {
     public interface IDataService
     {

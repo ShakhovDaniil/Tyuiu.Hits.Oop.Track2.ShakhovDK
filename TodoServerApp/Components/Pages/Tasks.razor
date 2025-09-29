@@ -1,14 +1,18 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Authorization
+<!--Подключение интерфейса заполнения таблицы-->
 @inject IDataService data
+<!--Включение режима интерактивной визуализации -->
 @rendermode InteractiveServer
+<!--Подключение авторизации-->
 @attribute [Authorize]
 
 <PageTitle>Задачи</PageTitle>
 
 <h1>Мои задачи</h1>
 
+<!--Реализация таблицы-->
 <table class = "table table-bordered">
+    <!--Названия заголовков таблицы-->
     <thead>
         <tr>
             <th>ИД</th>
@@ -18,6 +22,7 @@
             <th>Завершено</th>
         </tr>
     </thead>
+    <!--Заполнение таблицы-->
     <tbody>
         @if(tasks == null)
         {
@@ -43,6 +48,7 @@
 
 @code 
 {
+    <!--Вызов интерфейса для заполнения данных таблицы-->
     IEnumerable<TaskItem>? tasks;
 
     protected override async Task OnInitializedAsync()

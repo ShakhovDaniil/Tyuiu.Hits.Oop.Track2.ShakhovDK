@@ -1,4 +1,5 @@
-﻿namespace TodoServerApp.Data
+﻿//Реализация класса для заполнения данных таблицы
+namespace TodoServerApp.Data
 {
     public class TaskItem
     {
