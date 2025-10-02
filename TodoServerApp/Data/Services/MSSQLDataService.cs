@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//Реализация асинхронного заполнения базы данных
+using Microsoft.EntityFrameworkCore;
 using TodoServerApp.Data.Interfaces;
 
 namespace TodoServerApp.Data.Services

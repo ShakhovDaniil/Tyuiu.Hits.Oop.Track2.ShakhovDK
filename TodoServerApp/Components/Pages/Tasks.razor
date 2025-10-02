@@ -10,45 +10,39 @@
 
 <h1>Мои задачи</h1>
 
-<!--Реализация таблицы-->
-<table class = "table table-bordered">
-    <!--Названия заголовков таблицы-->
-    <thead>
-        <tr>
-            <th>ИД</th>
-            <th>Заголовок</th>
-            <th>Описание</th>
-            <th>Создано</th>
-            <th>Завершено</th>
-        </tr>
-    </thead>
-    <!--Заполнение таблицы-->
-    <tbody>
-        @if(tasks == null)
-        {
-            <tr>
-                <td colspan="5">Loading...</td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var task in tasks)
+<!--Реализация контейнера таблицы-->
+<div class="container">
+    @if (tasks == null)
             {
+            <!--Строка будет объединять 5 ячеек таблицы при выводе на страницу-->
                 <tr>
-                    <td>@task.Id</td>
-                    <td>@task.Title</td>
-                    <td>@task.Description</td>
-                    <td>@task.CreatedDate</td>
-                    <td>@task.FinishDate</td>
+                    <td> colspan = "5">Loading...</td>
                 </tr>
             }
-        }
-    </tbody>
-</table>
+    else
+    {
+    <!--Определение и реализация заголовков и содержимого таблицы-->
+        <div class="card-group">
+            @foreach (var task in tasks)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        @task.Title
+                    </div>
+                    <div class="card-body">
+                        <p>@task.Description</p>
+                        <p>@task.CreatedDate</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
 
-@code 
+
+@code
 {
-    <!--Вызов интерфейса для заполнения данных таблицы-->
+<!--Вызов интерфейса для заполнения данных таблицы-->
     IEnumerable<TaskItem>? tasks;
 
     protected override async Task OnInitializedAsync()

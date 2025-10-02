@@ -1,3 +1,4 @@
+//Описание полей базы данных
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
