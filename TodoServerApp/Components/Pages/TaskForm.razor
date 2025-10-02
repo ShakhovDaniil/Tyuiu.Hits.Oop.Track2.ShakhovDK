@@ -1,0 +1,83 @@
+﻿@*Перенаправление на страницу /tasks/add*@
+@page "/tasks/add"
+@page "/tasks/{Id:int}"
+@inject IDataService data
+@inject NavigationManager navigate
+<h3>TaskForm</h3>
+
+@*Форма добавления задачи c валидатором (проверкой вводимых значений)*@
+@if (TaskItem != null)
+{
+    <EditForm Model="TaskItem" FormName="TaskForm" OnValidSubmit="ValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <h2>Новая задача</h2>
+        <InputNumber @bind-Value="TaskItem.Id" hidden />
+    @*Группа полей для заполнения*@
+        @*Заголовок с форматированием*@
+        <div class="form-group d-flex justify-content-between m-2">
+            <label class="col-form-label col-3">Заголовок</label>
+            <InputText @bind-Value="TaskItem.Title" class="form-control" />
+            <ValidationMessage For="() => TaskItem.Title" />
+        </div>
+        @*Описание с форматированием*@
+        <div class="form-group d-flex justify-content-between m-2">
+            <label class="col-form-label col-3">Описание</label>
+            <InputText @bind-Value="TaskItem.Description" class="form-control" />
+            <ValidationMessage For="() => TaskItem.Description" />
+        </div>
+        @*Дата окончания с форматированием*@
+        <div class="form-group d-flex justify-content-between m-2">
+            <label class="col-form-label col-3">Дата завершения</label>
+            <InputDate @bind-Value="TaskItem.FinishDate" class="form-control" />
+            <ValidationMessage For="() => TaskItem.FinishDate" />
+        </div>
+        @*Кнопка сохранения с форматированием*@
+        <div class="btn-group">
+            <button class="btn btn-primary m-2" type="submit">Сохранить</button>
+            <a class="btn btn-primary m-2" href="/">Отмена</a>
+        </div>
+    </EditForm>
+}
+@code
+{
+    <!--Объявляет свойство Id как входной параметр для компонента, чтобы автоматически заполнить его значением,
+    например, из сегмента URL (если компонент используется как страница маршрута)-->
+    [Parameter]
+    public int Id { get; set; }
+
+    <!--Привязка данных из запроса к свойству TaskItem из класса TaskItem через атрибут SupplyParameterFromForm-->
+    [SupplyParameterFromForm]
+    TaskItem? TaskItem { get; set; }
+
+    <!--Переопределение асинхронного метода получения данных-->
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        <!--Проверка: это первое посещение страницы или повторная отправка формы?-->
+        if (TaskItem == null)
+        {
+            <!--Если TaskItem не пришёл из формы, создаём новый пустой объект-->
+            TaskItem = new();
+            <!--Проверка: это режим редактирования?-->
+            if (Id != 0)
+            {
+                <!--Загружаем существующие данные задачи по Id из источника (data)-->
+                var src = await data.GetTaskAsync(Id);
+                <!--Копируем загруженные данные в TaskItem, чтобы заполнить поля формы-->
+                TaskItem.Id = src.Id;
+                TaskItem.Title = src.Title;
+                TaskItem.Description = src.Description;
+                TaskItem.FinishDate = src.FinishDate;
+            }
+        }
+
+    }
+
+    <!--Сохранение/обновление данных и переход на главную страницу-->
+    async Task ValidSubmit()
+    {
+        await data.SaveAsync(TaskItem!);
+        navigate.NavigateTo("/");
+    }
+}

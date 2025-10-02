@@ -1,6 +1,8 @@
 ﻿@page "/"
 <!--Подключение интерфейса заполнения таблицы-->
 @inject IDataService data
+<!--Подключение навигационного менеджера-->
+@inject NavigationManager navigate
 <!--Включение режима интерактивной визуализации -->
 @rendermode InteractiveServer
 <!--Подключение авторизации-->
@@ -21,7 +23,11 @@
             }
     else
     {
-    <!--Определение и реализация заголовков и содержимого таблицы-->
+    <!--Реализация кнопки "Новая задача"-->
+        <div class="btn-group m-2">
+            <button class="btn-primary" @onclick="AddTask">Новая задача</button>
+        </div>
+    <!--Реализация заголовков и содержимого таблицы-->
         <div class="card-group">
             @foreach (var task in tasks)
             {
@@ -33,6 +39,10 @@
                         <p>@task.Description</p>
                         <p>@task.CreatedDate</p>
                     </div>
+                    <div class="card-footer">
+                        <a class="btn btn-primary" href="tasks/@task.Id">Изменить</a>
+                        <button class="btn btn-primary" @onclick="async () => await DeleteTask(task.Id)">Удалить</button>
+                    </div>
                 </div>
             }
         </div>
@@ -42,12 +52,27 @@
 
 @code
 {
-<!--Вызов интерфейса для заполнения данных таблицы-->
+    <!--Вызов интерфейса для заполнения данных таблицы-->
     IEnumerable<TaskItem>? tasks;
 
+    <!--Переопределение асинхронного метода получения данных для сохранения данных в tasks-->
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        tasks = await data.GetTaskItemsAsync();
+        tasks = await data.GetAllAsync();
+    }
+
+    @*Метод добавления задачи*@
+    void AddTask()
+    {
+        @*Перенаправление на страницу /tasks/add для создания задачи*@
+        navigate.NavigateTo("/tasks/add");
+    }
+
+    @*Метод удаления задачи*@
+    async Task DeleteTask(int id)
+    {
+        await data.DeleteAsync(id);
+        tasks = await data.GetAllAsync();
     }
 }

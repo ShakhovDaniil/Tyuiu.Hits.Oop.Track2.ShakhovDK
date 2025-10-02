@@ -12,10 +12,25 @@ namespace TodoServerApp.Data.Services
             new() { Id = 3, Title = "Задача 3", Description = "Описание задачи 3", CreatedDate = DateTime.Now },
         ];
 
-        public async Task<IEnumerable<TaskItem>> GetTaskItemsAsync()
+        public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TaskItem> GetTaskAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<TaskItem>> GetAllAsync()
         {
             await Task.Delay(1000); // имитация задержки
             return await Task.FromResult(tasks);
+        }
+
+        public async Task SaveAsync(TaskItem item)
+        {
+            throw new NotImplementedException();
         }
     }
 }
